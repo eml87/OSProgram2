@@ -62,8 +62,7 @@ int main(int argc, char *argv[]){
    // builds the deck
    buildDeck();
 
-   // launch a roundNumber
-   // inc the roundNumber counter to next roundNumber
+   // launch a round and increment the number
    // reset the win flag
    while( roundNumber <= numberOfRounds ){
       playRound();
@@ -75,7 +74,7 @@ int main(int argc, char *argv[]){
    fclose(fileIO);
 
    //close program
-   exit(EXIT_SUCCESS);
+   return 0;
 }
 
 // builds a deck of 4 suits with 13 cards each
@@ -280,13 +279,16 @@ void shuffleDeck(){
 // the dealer deals one card to each player
 void dealCards(){
    //player 1
-   player1.card1 = *topCard; topCard = topCard + 1;
+   player1.card1 = *topCard;
+   topCard += 1;
 
    //player 2
-   player2.card1 = *topCard; topCard = topCard + 1;
+   player2.card1 = *topCard;
+   topCard += 1;
 
    //player 3
-   player3.card1 = *topCard; topCard = topCard + 1;
+   player3.card1 = *topCard;
+   topCard += 1;
 }
 
 // prints deck to console and log
