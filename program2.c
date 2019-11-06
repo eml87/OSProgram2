@@ -101,12 +101,12 @@ void playRound(){
    fprintf(fileIO, "ROUND: %d _ _ _ _ _ _ _ _ _\n", roundNumber);
 
    // create dealer thread
-   int retD = pthread_create(&dealerThread, NULL, &dealer_thread, NULL);
+   int retD = pthread_create(&dealerThread, NULL, dealer_thread, NULL);
 
    // create player threads
    int retP;
    for( long i = 1; i <= NUM_PLAYERS; i++ ){
-      retP = pthread_create(&playerThread[i], NULL, &player_thread, (void *)i);
+      retP = pthread_create(&playerThread[i], NULL, player_thread, (void *)i);
    }
 
    // join threads so that function waits until all threads complete
