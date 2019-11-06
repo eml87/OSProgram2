@@ -53,11 +53,13 @@ void playRound();
 void printDeck();
 
 int main(int argc, char *argv[]){
-   // open the log file
-   fileIO = fopen("log.txt", "a");
-
    //parse console arguments
    srand(atoi(argv[1]));
+
+   // open the log file
+   fileIO = fopen("log.txt", "a");
+   fprintf(fileIO, "Game is starting.\n");
+   fprintf(fileIO, "Seed is: %s\n", argv[1]);
 
    // builds the deck
    buildDeck();
