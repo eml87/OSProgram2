@@ -57,9 +57,10 @@ int main(int argc, char *argv[]){
    srand(atoi(argv[1]));
 
    // open the log file
-   fileIO = fopen("log.txt", "a");
+   fileIO = fopen("log.txt", "w");
    fprintf(fileIO, "Game is starting.\n");
    fprintf(fileIO, "Seed is: %s\n", argv[1]);
+   fclose(fileIO);
 
    // builds the deck
    buildDeck();
@@ -96,6 +97,7 @@ void buildDeck(){
 
 // launch dealer and player threads for the current roundNumber
 void playRound(){
+   fileIO = fopen("log.txt", "a");
    printf("ROUND: %d _ _ _ _ _ _ _ _ _\n", roundNumber);
    fprintf(fileIO, "ROUND: %d _ _ _ _ _ _ _ _ _\n", roundNumber);
 
@@ -115,10 +117,13 @@ void playRound(){
    for( j = 0; j < 3; j++ ){
       ret = pthread_join(playerThread[j], NULL);
    }
+   fclose(fileIO);
 }
 
 // this function is for the dealer thread
 void *dealer_thread(void *arg){
+   fileIO = fopen("log.txt", "a");
+
    // identify the dealer as player 0
    long pId = 0;
 
@@ -139,11 +144,13 @@ void *dealer_thread(void *arg){
 
    //write to file
    fprintf(fileIO, "DEALER: exits round: \n");
+   fclose(fileIO);
    pthread_exit(NULL);
 }
 
 // this function is for player's threads
 void *player_thread(void *playerId){
+   fileIO = fopen("log.txt", "a");
    long pId = (long)playerId;
 
    // assign hands to players based on which roundNumber is being played
@@ -189,11 +196,13 @@ void *player_thread(void *playerId){
    }
    // leave the player thread
    fprintf(fileIO, "PLAYER %ld: exits round\n", pId);
+   fclose(fileIO);
    pthread_exit(NULL);
 }
 
 
 void useTheDeck(long pId, struct hand thisHand){
+   fileIO = fopen("log.txt", "a");
    //this is for the dealer
    if( pId == 0 ){
       // shuffles the deck
@@ -265,6 +274,7 @@ void useTheDeck(long pId, struct hand thisHand){
 
    // broadcast that the deck is available
    pthread_cond_broadcast(&condition_var);
+   fclose(fileIO);
 }
 
 // dealer swaps current card w/ rand card until all are shuffled
@@ -295,6 +305,7 @@ void dealCards(){
 
 // prints deck to console and log
 void printDeck(){
+   fileIO = fopen("log.txt", "a");
    printf("DECK: ");
    fprintf(fileIO, "DECK: ");
    int *ptr = topCard;
@@ -307,4 +318,5 @@ void printDeck(){
          fprintf(fileIO, "%d \n", *ptr);
       }
    }
+   fclose(fileIO);
 }
