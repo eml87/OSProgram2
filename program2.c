@@ -46,12 +46,10 @@ struct hand player1, player2, player3;
 void *dealer_thread(void *arg);
 void *player_thread(void *playerId);
 void useTheDeck(long, struct hand);
-void randSeed();
 void buildDeck();
 void shuffleDeck();
 void dealCards();
 void playRound();
-void parseArgs(char *[]);
 void printDeck();
 
 int main(int argc, char *argv[]){
@@ -101,20 +99,20 @@ void playRound(){
    fprintf(fileIO, "ROUND: %d _ _ _ _ _ _ _ _ _\n", roundNumber);
 
    // create dealer thread
-   int retD = pthread_create(&dealerThread, NULL, dealer_thread, NULL);
+   int ret = pthread_create(&dealerThread, NULL, dealer_thread, NULL);
 
    // create player threads
-   int retP;
+   //int retP;
    long i;
    for(i = 1; i <= NUM_PLAYERS; i++ ){
-      retP = pthread_create(&playerThread[i], NULL, player_thread, (void *)i);
+      ret = pthread_create(&playerThread[i], NULL, player_thread, (void *)i);
    }
 
    int j;
    // join threads so that function waits until all threads complete
-   pthread_join(dealerThread, NULL);
+   ret = pthread_join(dealerThread, NULL);
    for( j = 0; j < 3; j++ ){
-      pthread_join(playerThread[j], NULL);
+      ret = pthread_join(playerThread[j], NULL);
    }
 }
 
@@ -135,7 +133,6 @@ void *dealer_thread(void *arg){
       while( !win ){
             pthread_cond_wait(&cond_win1, &mutex_dealerExit);
       }
-
    //unlock the exit
    pthread_mutex_unlock(&mutex_dealerExit);
 
@@ -180,7 +177,7 @@ void *player_thread(void *playerId){
       pthread_mutex_lock(&mutex_useDeck);
 
 		 // make players wait their respective turn
-         while( pId != turn && win == 0 ){
+         while(pId != turn && win == 0){
             pthread_cond_wait(&condition_var, &mutex_useDeck);
          }
       if( win == 0 )
