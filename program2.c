@@ -82,9 +82,9 @@ int main(int argc, char *argv[]){
 
 // builds a deck of 4 suits with 13 cards each
 void buildDeck(){
-   int cardVal = 0, card = 0;
+   int cardVal = 0, card = 0, i;
    while( (card < NUM_CARDS) && (cardVal < (NUM_CARDS/4)) ){
-      for( int i = 0; i < 4; i++ ){
+      for(i = 0; i < 4; i++ ){
          deck[card] = cardVal;
          card++;
       }
@@ -105,13 +105,15 @@ void playRound(){
 
    // create player threads
    int retP;
-   for( long i = 1; i <= NUM_PLAYERS; i++ ){
+   long i;
+   for(i = 1; i <= NUM_PLAYERS; i++ ){
       retP = pthread_create(&playerThread[i], NULL, player_thread, (void *)i);
    }
 
+   int j;
    // join threads so that function waits until all threads complete
    pthread_join(dealerThread, NULL);
-   for( int j = 0; j < 3; j++ ){
+   for( j = 0; j < 3; j++ ){
       pthread_join(playerThread[j], NULL);
    }
 }
@@ -269,7 +271,8 @@ void useTheDeck(long pId, struct hand thisHand){
 
 // dealer swaps current card w/ rand card until all are shuffled
 void shuffleDeck(){
-   for( int i = 0; i < (NUM_CARDS - 1); i++ ){
+   int i;
+   for(i = 0; i < (NUM_CARDS - 1); i++ ){
       int randPos = i + (rand() % (NUM_CARDS - i));
       int temp = deck[i];
       deck[i] = deck[randPos];
